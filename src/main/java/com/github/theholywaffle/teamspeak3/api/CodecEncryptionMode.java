@@ -41,7 +41,7 @@ public enum CodecEncryptionMode {
 	/**
 	 * Each channel manages audio encryption on its own.
 	 *
-	 * @see TS3Api#editChannel(int, Map)
+	 * @see TS3Api#editChannelProperties(int, Map)
 	 */
 	CODEC_CRYPT_INDIVIDUAL(0),
 

@@ -82,14 +82,14 @@ public class TS3Api {
 	}
 
 	/**
-	 * Adds a new ban entry. At least one of the parameters {@code ip}, {@code name} or {@code uid} needs to be not null.
+	 * Adds a new ban entry. At least one of the parameters {@code ip}, {@code name} or {@code uniqueId} needs to be not null.
 	 * Returns the ID of the newly created ban.
 	 *
 	 * @param ip
 	 * 		a RegEx pattern to match a client's IP against, can be null
 	 * @param name
 	 * 		a RegEx pattern to match a client's name against, can be null
-	 * @param uid
+	 * @param uniqueId
 	 * 		the unique identifier of a client, can be null
 	 * @param timeInSeconds
 	 * 		the duration of the ban in seconds. 0 equals a permanent ban
@@ -106,8 +106,8 @@ public class TS3Api {
 	 * @see Client#getUniqueIdentifier()
 	 * @see ClientInfo#getIp()
 	 */
-	public int addBan(String ip, String name, String uid, long timeInSeconds, String reason) {
-		return asyncApi.addBan(ip, name, uid, timeInSeconds, reason).getUninterruptibly();
+	public int addBan(String ip, String name, String uniqueId, long timeInSeconds, String reason) {
+		return asyncApi.addBan(ip, name, uniqueId, timeInSeconds, reason).getUninterruptibly();
 	}
 
 	/**
@@ -130,7 +130,6 @@ public class TS3Api {
 	 * @see Permission
 	 */
 	public void addChannelClientPermission(int channelId, int clientDBId, String permName, int permValue) {
-		//TODO ... change to addClientChannelPermission? Not sure on this one.
 		asyncApi.addChannelClientPermission(channelId, clientDBId, permName, permValue).getUninterruptibly();
 	}
 
@@ -138,7 +137,7 @@ public class TS3Api {
 	 * Creates a new channel group for clients using a given name and returns its ID.
 	 * <p>
 	 * To create channel group templates or ones for server queries,
-	 * use {@link #addChannelGroup(String, PermissionGroupDatabaseType)}.
+	 * use {@link #createChannelGroup(String, PermissionGroupDatabaseType)}.
 	 * </p>
 	 *
 	 * @param name
@@ -151,9 +150,8 @@ public class TS3Api {
 	 * @querycommands 1
 	 * @see ChannelGroup
 	 */
-	public int addChannelGroup(String name) {
-		//TODO change to createChannelGroup
-		return asyncApi.addChannelGroup(name).getUninterruptibly();
+	public int createChannelGroup(String name) {
+		return asyncApi.createChannelGroup(name).getUninterruptibly();
 	}
 
 	/**
@@ -171,9 +169,8 @@ public class TS3Api {
 	 * @querycommands 1
 	 * @see ChannelGroup
 	 */
-	public int addChannelGroup(String name, PermissionGroupDatabaseType type) {
-		//TODO change to createChannelGroup
-		return asyncApi.addChannelGroup(name, type).getUninterruptibly();
+	public int createChannelGroup(String name, PermissionGroupDatabaseType type) {
+		return asyncApi.createChannelGroup(name, type).getUninterruptibly();
 	}
 
 	/**
@@ -256,7 +253,7 @@ public class TS3Api {
 	 * @see Client#getDatabaseId()
 	 */
 	public void addClientToServerGroup(int groupId, int clientDatabaseId) {
-		//TODO make consistent with below method... somehow.
+		//TODO ... addToServerGroup
 		asyncApi.addClientToServerGroup(groupId, clientDatabaseId).getUninterruptibly();
 	}
 
@@ -327,12 +324,11 @@ public class TS3Api {
 	 * 		if the execution of a command fails
 	 * @querycommands 1
 	 * @see PrivilegeKeyType
-	 * @see #addPrivilegeKeyServerGroup(int, String)
-	 * @see #addPrivilegeKeyChannelGroup(int, int, String)
+	 * @see #createServerGroupPrivilegeKey(int, String)
+	 * @see #createChannelGroupPrivilegeKey(int, int, String)
 	 */
-	public String addPrivilegeKey(PrivilegeKeyType type, int groupId, int channelId, String description) {
-		//TODO change to createPrivilegeKey
-		return asyncApi.addPrivilegeKey(type, groupId, channelId, description).getUninterruptibly();
+	public String createPrivilegeKey(PrivilegeKeyType type, int groupId, int channelId, String description) {
+		return asyncApi.createPrivilegeKey(type, groupId, channelId, description).getUninterruptibly();
 	}
 
 	/**
@@ -352,12 +348,11 @@ public class TS3Api {
 	 * @querycommands 1
 	 * @see ChannelGroup#getId()
 	 * @see Channel#getId()
-	 * @see #addPrivilegeKey(PrivilegeKeyType, int, int, String)
-	 * @see #addPrivilegeKeyServerGroup(int, String)
+	 * @see #createPrivilegeKey(PrivilegeKeyType, int, int, String)
+	 * @see #createServerGroupPrivilegeKey(int, String)
 	 */
-	public String addPrivilegeKeyChannelGroup(int channelGroupId, int channelId, String description) {
-		//TODO change to createChannelGroupPrivilegeKey?
-		return asyncApi.addPrivilegeKeyChannelGroup(channelGroupId, channelId, description).getUninterruptibly();
+	public String createChannelGroupPrivilegeKey(int channelGroupId, int channelId, String description) {
+		return asyncApi.createChannelGroupPrivilegeKey(channelGroupId, channelId, description).getUninterruptibly();
 	}
 
 	/**
@@ -374,19 +369,18 @@ public class TS3Api {
 	 * 		if the execution of a command fails
 	 * @querycommands 1
 	 * @see ServerGroup#getId()
-	 * @see #addPrivilegeKey(PrivilegeKeyType, int, int, String)
-	 * @see #addPrivilegeKeyChannelGroup(int, int, String)
+	 * @see #createPrivilegeKey(PrivilegeKeyType, int, int, String)
+	 * @see #createChannelGroupPrivilegeKey(int, int, String)
 	 */
-	public String addPrivilegeKeyServerGroup(int serverGroupId, String description) {
-		//TODO change to createServerGroupPrivilegeKey
-		return asyncApi.addPrivilegeKeyServerGroup(serverGroupId, description).getUninterruptibly();
+	public String createServerGroupPrivilegeKey(int serverGroupId, String description) {
+		return asyncApi.createServerGroupPrivilegeKey(serverGroupId, description).getUninterruptibly();
 	}
 
 	/**
 	 * Creates a new server group for clients using a given name and returns its ID.
 	 * <p>
 	 * To create server group templates or ones for server queries,
-	 * use {@link #addServerGroup(String, PermissionGroupDatabaseType)}.
+	 * use {@link #createServerGroup(String, PermissionGroupDatabaseType)}.
 	 * </p>
 	 *
 	 * @param name
@@ -399,9 +393,8 @@ public class TS3Api {
 	 * @querycommands 1
 	 * @see ServerGroup
 	 */
-	public int addServerGroup(String name) {
-		//TODO change to createServerGroup
-		return asyncApi.addServerGroup(name).getUninterruptibly();
+	public int createServerGroup(String name) {
+		return asyncApi.createServerGroup(name).getUninterruptibly();
 	}
 
 	/**
@@ -420,9 +413,8 @@ public class TS3Api {
 	 * @see ServerGroup
 	 * @see PermissionGroupDatabaseType
 	 */
-	public int addServerGroup(String name, PermissionGroupDatabaseType type) {
-		//TODO change to createServerGroup
-		return asyncApi.addServerGroup(name, type).getUninterruptibly();
+	public int createServerGroup(String name, PermissionGroupDatabaseType type) {
+		return asyncApi.createServerGroup(name, type).getUninterruptibly();
 	}
 
 	/**
@@ -769,9 +761,8 @@ public class TS3Api {
 	 * 		if the execution of a command fails
 	 * @querycommands 1
 	 */
-	public void deleteAllBans() {
-		//TODO removeAllBans
-		asyncApi.deleteAllBans().getUninterruptibly();
+	public void removeAllBans() {
+		asyncApi.removeAllBans().getUninterruptibly();
 	}
 
 	/**
@@ -786,9 +777,8 @@ public class TS3Api {
 	 * @see Client#getDatabaseId()
 	 * @see Complaint
 	 */
-	public void deleteAllComplaints(int clientDBId) {
-		//TODO removeAllComplaints
-		asyncApi.deleteAllComplaints(clientDBId).getUninterruptibly();
+	public void removeAllComplaints(int clientDBId) {
+		asyncApi.removeAllComplaints(clientDBId).getUninterruptibly();
 	}
 
 	/**
@@ -802,9 +792,8 @@ public class TS3Api {
 	 * @querycommands 1
 	 * @see Ban#getId()
 	 */
-	public void deleteBan(int banId) {
-		//TODO removeBan
-		asyncApi.deleteBan(banId).getUninterruptibly();
+	public void removeBan(int banId) {
+		asyncApi.removeBan(banId).getUninterruptibly();
 	}
 
 	/**
@@ -861,9 +850,8 @@ public class TS3Api {
 	 * @see Client#getDatabaseId()
 	 * @see Permission#getName()
 	 */
-	public void deleteChannelClientPermission(int channelId, int clientDBId, String permName) {
-		//TODO removeClientChannelPermission
-		asyncApi.deleteChannelClientPermission(channelId, clientDBId, permName).getUninterruptibly();
+	public void removeClientChannelPermission(int channelId, int clientDBId, String permName) {
+		asyncApi.removeClientChannelPermission(channelId, clientDBId, permName).getUninterruptibly();
 	}
 
 	/**
@@ -914,9 +902,8 @@ public class TS3Api {
 	 * @see ChannelGroup#getId()
 	 * @see Permission#getName()
 	 */
-	public void deleteChannelGroupPermission(int groupId, String permName) {
-		//TODO removeChannelGroupPermission
-		asyncApi.deleteChannelGroupPermission(groupId, permName).getUninterruptibly();
+	public void removeChannelGroupPermission(int groupId, String permName) {
+		asyncApi.removeChannelGroupPermission(groupId, permName).getUninterruptibly();
 	}
 
 	/**
@@ -933,9 +920,8 @@ public class TS3Api {
 	 * @see Channel#getId()
 	 * @see Permission#getName()
 	 */
-	public void deleteChannelPermission(int channelId, String permName) {
-		//TODO removeChannelPermission
-		asyncApi.deleteChannelPermission(channelId, permName).getUninterruptibly();
+	public void removeChannelPermission(int channelId, String permName) {
+		asyncApi.removeChannelPermission(channelId, permName).getUninterruptibly();
 	}
 
 	/**
@@ -952,9 +938,8 @@ public class TS3Api {
 	 * @see Client#getDatabaseId()
 	 * @see Permission#getName()
 	 */
-	public void deleteClientPermission(int clientDBId, String permName) {
-		//TODO removeClientPermission
-		asyncApi.deleteClientPermission(clientDBId, permName).getUninterruptibly();
+	public void removeClientPermission(int clientDBId, String permName) {
+		asyncApi.removeClientPermission(clientDBId, permName).getUninterruptibly();
 	}
 
 	/**
@@ -972,9 +957,8 @@ public class TS3Api {
 	 * @see Complaint
 	 * @see Client#getDatabaseId()
 	 */
-	public void deleteComplaint(int targetClientDBId, int fromClientDBId) {
-		//TODO removeComplaint
-		asyncApi.deleteComplaint(targetClientDBId, fromClientDBId).getUninterruptibly();
+	public void removeComplaint(int targetClientDBId, int fromClientDBId) {
+		asyncApi.removeComplaint(targetClientDBId, fromClientDBId).getUninterruptibly();
 	}
 
 	/**
@@ -1134,8 +1118,8 @@ public class TS3Api {
 	 * @see ServerGroupType
 	 * @see Permission#getName()
 	 */
-	public void deletePermissionFromAllServerGroups(ServerGroupType type, String permName) {
-		//TODO removePermissionFromAllServerGroups
+	public void removePermissionFromAllServerGroups(ServerGroupType type, String permName) {
+		//TODO removePermissionFromAllServerGroups ... removeGlobalServerGroupPermission ???
 		asyncApi.deletePermissionFromAllServerGroups(type, permName).getUninterruptibly();
 	}
 
@@ -1453,9 +1437,8 @@ public class TS3Api {
 	 * @querycommands 1
 	 * @see Channel#getId()
 	 */
-	public void editChannel(int channelId, Map<ChannelProperty, String> options) {
-		//TODO editChannelProperties ???
-		asyncApi.editChannel(channelId, options).getUninterruptibly();
+	public void editChannelProperties(int channelId, Map<ChannelProperty, String> options) {
+		asyncApi.editChannelProperties(channelId, options).getUninterruptibly();
 	}
 
 	/**
@@ -1476,19 +1459,18 @@ public class TS3Api {
 	 * 		if the execution of a command fails
 	 * @querycommands 1
 	 * @see Channel#getId()
-	 * @see #editChannel(int, Map)
+	 * @see #editChannelProperties(int, Map)
 	 */
-	public void editChannel(int channelId, ChannelProperty property, String value) {
-		//TODO editChannelProperty ???
-		asyncApi.editChannel(channelId, property, value).getUninterruptibly();
+	public void editChannelProperty(int channelId, ChannelProperty property, String value) {
+		asyncApi.editChannelProperty(channelId, property, value).getUninterruptibly();
 	}
 
 	/**
 	 * Changes a client's configuration using given properties.
 	 * <p>
 	 * Only {@link ClientProperty#CLIENT_DESCRIPTION} can be changed for other clients.
-	 * To update the current client's properties, use {@link #updateClient(Map)}
-	 * or {@link #updateClient(ClientProperty, String)}.
+	 * To update the current client's properties, use {@link #updateClientProperties(Map)}
+	 * or {@link #updateClientProperty(ClientProperty, String)}.
 	 * </p>
 	 *
 	 * @param clientId
@@ -1500,19 +1482,18 @@ public class TS3Api {
 	 * 		if the execution of a command fails
 	 * @querycommands 1
 	 * @see Client#getId()
-	 * @see #updateClient(Map)
+	 * @see #updateClientProperties(Map)
 	 */
-	public void editClient(int clientId, Map<ClientProperty, String> options) {
-		//TODO editClientProperties
-		asyncApi.editClient(clientId, options).getUninterruptibly();
+	public void editClientProperties(int clientId, Map<ClientProperty, String> options) {
+		asyncApi.editClientProperties(clientId, options).getUninterruptibly();
 	}
 
 	/**
 	 * Changes a single property of the given client.
 	 * <p>
 	 * Only {@link ClientProperty#CLIENT_DESCRIPTION} can be changed for other clients.
-	 * To update the current client's properties, use {@link #updateClient(Map)}
-	 * or {@link #updateClient(ClientProperty, String)}.
+	 * To update the current client's properties, use {@link #updateClientProperties(Map)}
+	 * or {@link #updateClientProperty(ClientProperty, String)}.
 	 * </p>
 	 *
 	 * @param clientId
@@ -1526,12 +1507,11 @@ public class TS3Api {
 	 * 		if the execution of a command fails
 	 * @querycommands 1
 	 * @see Client#getId()
-	 * @see #editClient(int, Map)
-	 * @see #updateClient(Map)
+	 * @see #editClientProperties(int, Map)
+	 * @see #updateClientProperties(Map)
 	 */
-	public void editClient(int clientId, ClientProperty property, String value) {
-		//TODO editClientProperty
-		asyncApi.editClient(clientId, property, value).getUninterruptibly();
+	public void editClientProperty(int clientId, ClientProperty property, String value) {
+		asyncApi.editClientProperty(clientId, property, value).getUninterruptibly();
 	}
 
 	/**
@@ -1570,7 +1550,6 @@ public class TS3Api {
 	 * @see ServerInstanceProperty#isChangeable()
 	 */
 	public void editInstance(ServerInstanceProperty property, String value) {
-		//TODO Decide VirtualServer vs ServerInstance
 		asyncApi.editInstance(property, value).getUninterruptibly();
 	}
 
@@ -1881,7 +1860,7 @@ public class TS3Api {
 	/**
 	 * Gets information about the client with the specified unique identifier.
 	 *
-	 * @param clientUId
+	 * @param clientUniqueId
 	 * 		the unique identifier of the client
 	 *
 	 * @return information about the client
@@ -1892,8 +1871,8 @@ public class TS3Api {
 	 * @see Client#getUniqueIdentifier()
 	 * @see ClientInfo
 	 */
-	public ClientInfo getClientByUId(String clientUId) {
-		return asyncApi.getClientByUId(clientUId).getUninterruptibly();
+	public ClientInfo getClientByUniqueId(String clientUniqueId) {
+		return asyncApi.getClientByUniqueId(clientUniqueId).getUninterruptibly();
 	}
 
 	/**
@@ -2009,13 +1988,14 @@ public class TS3Api {
 	 * @see Client#getNickname()
 	 */
 	public List<DatabaseClientInfo> getDatabaseClientsByName(String name) {
+		//
 		return asyncApi.getDatabaseClientsByName(name).getUninterruptibly();
 	}
 
 	/**
 	 * Gets information about the client with the specified unique identifier in the server database.
 	 *
-	 * @param clientUId
+	 * @param clientUniqueId
 	 * 		the unique identifier of the client
 	 *
 	 * @return the database client or {@code null} if no client was found
@@ -2026,8 +2006,8 @@ public class TS3Api {
 	 * @see Client#getUniqueIdentifier()
 	 * @see DatabaseClientInfo
 	 */
-	public DatabaseClientInfo getDatabaseClientByUId(String clientUId) {
-		return asyncApi.getDatabaseClientByUId(clientUId).getUninterruptibly();
+	public DatabaseClientInfo getDatabaseClientByUniqueId(String clientUniqueId) {
+		return asyncApi.getDatabaseClientByUniqueId(clientUniqueId).getUninterruptibly();
 	}
 
 	/**
@@ -2529,7 +2509,7 @@ public class TS3Api {
 	 * @throws TS3CommandFailedException
 	 * 		if the execution of a command fails
 	 * @querycommands 1
-	 * @see #addPrivilegeKey(PrivilegeKeyType, int, int, String)
+	 * @see #createPrivilegeKey(PrivilegeKeyType, int, int, String)
 	 * @see #usePrivilegeKey(String)
 	 */
 	public List<PrivilegeKey> getPrivilegeKeys() {
@@ -2633,8 +2613,8 @@ public class TS3Api {
 	 * @see Client#getDatabaseId()
 	 * @see #getServerGroupsByClient(Client)
 	 */
-	public List<ServerGroup> getServerGroupsByClientId(int clientDatabaseId) {
-		return asyncApi.getServerGroupsByClientId(clientDatabaseId).getUninterruptibly();
+	public List<ServerGroup> getServerGroupsByDatabaseClientId(int clientDatabaseId) {
+		return asyncApi.getServerGroupsByDatabaseClientId(clientDatabaseId).getUninterruptibly();
 	}
 
 	/**
@@ -2648,7 +2628,7 @@ public class TS3Api {
 	 * @throws TS3CommandFailedException
 	 * 		if the execution of a command fails
 	 * @querycommands 2
-	 * @see #getServerGroupsByClientId(int)
+	 * @see #getServerGroupsByDatabaseClientId(int)
 	 */
 	public List<ServerGroup> getServerGroupsByClient(Client client) {
 		return asyncApi.getServerGroupsByClient(client).getUninterruptibly();
@@ -2769,16 +2749,16 @@ public class TS3Api {
 	 * online by the time the next command is executed.
 	 * </p>
 	 *
-	 * @param clientUId
+	 * @param uniqueId
 	 * 		the unique ID of the client
 	 *
 	 * @return {@code true} if the client is online, {@code false} otherwise
 	 *
 	 * @querycommands 1
-	 * @see #getClientByUId(String)
+	 * @see #getClientByUniqueId(String)
 	 */
-	public boolean isClientOnline(String clientUId) {
-		return asyncApi.isClientOnline(clientUId).getUninterruptibly();
+	public boolean isClientOnline(String uniqueId) {
+		return asyncApi.isClientOnline(uniqueId).getUninterruptibly();
 	}
 
 	/**
@@ -2796,6 +2776,7 @@ public class TS3Api {
 	 * @see #kickClientFromChannel(String, int...)
 	 */
 	public void kickClientFromChannel(int... clientIds) {
+		//TODO here and below, remove "Client"?
 		asyncApi.kickClientFromChannel(clientIds).getUninterruptibly();
 	}
 
@@ -2992,7 +2973,7 @@ public class TS3Api {
 	 * To move the channel right below the parent channel, set {@code order} to {@code 0}.
 	 * </p><p>
 	 * Note that re-ordering a channel without also changing its parent channel cannot be done with this method.
-	 * Use {@link #editChannel(int, Map)} to change {@link ChannelProperty#CHANNEL_ORDER} instead.
+	 * Use {@link #editChannelProperties(int, Map)} to change {@link ChannelProperty#CHANNEL_ORDER} instead.
 	 * </p>
 	 *
 	 * @param channelId
@@ -3033,7 +3014,7 @@ public class TS3Api {
 	public void moveClient(int clientId, int channelId) {
 		asyncApi.moveClient(clientId, channelId).getUninterruptibly();
 	}
-
+...
 	/**
 	 * Moves multiple clients into a channel.
 	 * Immediately returns {@code true} for an empty client ID array.
@@ -3512,6 +3493,7 @@ public class TS3Api {
 	 * @see #removeClientFromServerGroup(ServerGroup, Client)
 	 */
 	public void removeClientFromServerGroup(int serverGroupId, int clientDatabaseId) {
+		//TODO and below, remove "client" ???
 		asyncApi.removeClientFromServerGroup(serverGroupId, clientDatabaseId).getUninterruptibly();
 	}
 
@@ -3689,7 +3671,7 @@ public class TS3Api {
 	 * The message body's length is limited to 4096 UTF-8 bytes and accepts BB codes
 	 * </p>
 	 *
-	 * @param clientUId
+	 * @param clientUniqueId
 	 * 		the unique identifier of the client to send the message to
 	 * @param subject
 	 * 		the subject for the message, may not contain BB codes
@@ -3702,8 +3684,8 @@ public class TS3Api {
 	 * @see Client#getUniqueIdentifier()
 	 * @see Message
 	 */
-	public void sendOfflineMessage(String clientUId, String subject, String message) {
-		asyncApi.sendOfflineMessage(clientUId, subject, message).getUninterruptibly();
+	public void sendOfflineMessage(String clientUniqueId, String subject, String message) {
+		asyncApi.sendOfflineMessage(clientUniqueId, subject, message).getUninterruptibly();
 	}
 
 	/**
@@ -3925,7 +3907,7 @@ public class TS3Api {
 	 * @throws TS3CommandFailedException
 	 * 		if the execution of a command fails
 	 * @querycommands 1
-	 * @see #updateClient(Map)
+	 * @see #updateClientProperties(Map)
 	 */
 	public void setNickname(String nickname) {
 		asyncApi.setNickname(nickname).getUninterruptibly();
@@ -4021,11 +4003,11 @@ public class TS3Api {
 	 * @throws TS3CommandFailedException
 	 * 		if the execution of a command fails
 	 * @querycommands 1
-	 * @see #updateClient(ClientProperty, String)
-	 * @see #editClient(int, Map)
+	 * @see #updateClientProperty(ClientProperty, String)
+	 * @see #editClientProperties(int, Map)
 	 */
-	public void updateClient(Map<ClientProperty, String> options) {
-		asyncApi.updateClient(options).getUninterruptibly();
+	public void updateClientProperties(Map<ClientProperty, String> options) {
+		asyncApi.updateClientProperties(options).getUninterruptibly();
 	}
 
 	/**
@@ -4043,11 +4025,11 @@ public class TS3Api {
 	 * @throws TS3CommandFailedException
 	 * 		if the execution of a command fails
 	 * @querycommands 1
-	 * @see #updateClient(Map)
-	 * @see #editClient(int, Map)
+	 * @see #updateClientProperties(Map)
+	 * @see #editClientProperties(int, Map)
 	 */
-	public void updateClient(ClientProperty property, String value) {
-		asyncApi.updateClient(property, value).getUninterruptibly();
+	public void updateClientProperty(ClientProperty property, String value) {
+		asyncApi.updateClientProperty(property, value).getUninterruptibly();
 	}
 
 	/**
@@ -4267,7 +4249,7 @@ public class TS3Api {
 	 * 		if the execution of a command fails
 	 * @querycommands 1
 	 * @see PrivilegeKey
-	 * @see #addPrivilegeKey(PrivilegeKeyType, int, int, String)
+	 * @see #createPrivilegeKey(PrivilegeKeyType, int, int, String)
 	 * @see #usePrivilegeKey(PrivilegeKey)
 	 */
 	public void usePrivilegeKey(String token) {
@@ -4284,7 +4266,7 @@ public class TS3Api {
 	 * 		if the execution of a command fails
 	 * @querycommands 1
 	 * @see PrivilegeKey
-	 * @see #addPrivilegeKey(PrivilegeKeyType, int, int, String)
+	 * @see #createPrivilegeKey(PrivilegeKeyType, int, int, String)
 	 * @see #usePrivilegeKey(String)
 	 */
 	public void usePrivilegeKey(PrivilegeKey privilegeKey) {

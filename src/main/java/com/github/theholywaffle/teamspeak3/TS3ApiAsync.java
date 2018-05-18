@@ -160,7 +160,7 @@ public class TS3ApiAsync {
 	 * Creates a new channel group for clients using a given name and returns its ID.
 	 * <p>
 	 * To create channel group templates or ones for server queries,
-	 * use {@link #addChannelGroup(String, PermissionGroupDatabaseType)}.
+	 * use {@link #createChannelGroup(String, PermissionGroupDatabaseType)}.
 	 * </p>
 	 *
 	 * @param name
@@ -173,8 +173,8 @@ public class TS3ApiAsync {
 	 * @querycommands 1
 	 * @see ChannelGroup
 	 */
-	public CommandFuture<Integer> addChannelGroup(String name) {
-		return addChannelGroup(name, null);
+	public CommandFuture<Integer> createChannelGroup(String name) {
+		return createChannelGroup(name, null);
 	}
 
 	/**
@@ -192,7 +192,7 @@ public class TS3ApiAsync {
 	 * @querycommands 1
 	 * @see ChannelGroup
 	 */
-	public CommandFuture<Integer> addChannelGroup(String name, PermissionGroupDatabaseType type) {
+	public CommandFuture<Integer> createChannelGroup(String name, PermissionGroupDatabaseType type) {
 		Command cmd = ChannelGroupCommands.channelGroupAdd(name, type);
 		return executeAndReturnIntProperty(cmd, "cgid");
 	}
@@ -365,10 +365,10 @@ public class TS3ApiAsync {
 	 * 		if the execution of a command fails
 	 * @querycommands 1
 	 * @see PrivilegeKeyType
-	 * @see #addPrivilegeKeyServerGroup(int, String)
-	 * @see #addPrivilegeKeyChannelGroup(int, int, String)
+	 * @see #createServerGroupPrivilegeKey(int, String)
+	 * @see #createChannelGroupPrivilegeKey(int, int, String)
 	 */
-	public CommandFuture<String> addPrivilegeKey(PrivilegeKeyType type, int groupId, int channelId, String description) {
+	public CommandFuture<String> createPrivilegeKey(PrivilegeKeyType type, int groupId, int channelId, String description) {
 		Command cmd = PrivilegeKeyCommands.privilegeKeyAdd(type, groupId, channelId, description);
 		return executeAndReturnStringProperty(cmd, "token");
 	}
@@ -390,11 +390,11 @@ public class TS3ApiAsync {
 	 * @querycommands 1
 	 * @see ChannelGroup#getId()
 	 * @see Channel#getId()
-	 * @see #addPrivilegeKey(PrivilegeKeyType, int, int, String)
-	 * @see #addPrivilegeKeyServerGroup(int, String)
+	 * @see #createPrivilegeKey(PrivilegeKeyType, int, int, String)
+	 * @see #createServerGroupPrivilegeKey(int, String)
 	 */
-	public CommandFuture<String> addPrivilegeKeyChannelGroup(int channelGroupId, int channelId, String description) {
-		return addPrivilegeKey(PrivilegeKeyType.CHANNEL_GROUP, channelGroupId, channelId, description);
+	public CommandFuture<String> createChannelGroupPrivilegeKey(int channelGroupId, int channelId, String description) {
+		return createPrivilegeKey(PrivilegeKeyType.CHANNEL_GROUP, channelGroupId, channelId, description);
 	}
 
 	/**
@@ -411,18 +411,18 @@ public class TS3ApiAsync {
 	 * 		if the execution of a command fails
 	 * @querycommands 1
 	 * @see ServerGroup#getId()
-	 * @see #addPrivilegeKey(PrivilegeKeyType, int, int, String)
-	 * @see #addPrivilegeKeyChannelGroup(int, int, String)
+	 * @see #createPrivilegeKey(PrivilegeKeyType, int, int, String)
+	 * @see #createChannelGroupPrivilegeKey(int, int, String)
 	 */
-	public CommandFuture<String> addPrivilegeKeyServerGroup(int serverGroupId, String description) {
-		return addPrivilegeKey(PrivilegeKeyType.SERVER_GROUP, serverGroupId, 0, description);
+	public CommandFuture<String> createServerGroupPrivilegeKey(int serverGroupId, String description) {
+		return createPrivilegeKey(PrivilegeKeyType.SERVER_GROUP, serverGroupId, 0, description);
 	}
 
 	/**
 	 * Creates a new server group for clients using a given name and returns its ID.
 	 * <p>
 	 * To create server group templates or ones for server queries,
-	 * use {@link #addServerGroup(String, PermissionGroupDatabaseType)}.
+	 * use {@link #createServerGroup(String, PermissionGroupDatabaseType)}.
 	 * </p>
 	 *
 	 * @param name
@@ -435,8 +435,8 @@ public class TS3ApiAsync {
 	 * @querycommands 1
 	 * @see ServerGroup
 	 */
-	public CommandFuture<Integer> addServerGroup(String name) {
-		return addServerGroup(name, PermissionGroupDatabaseType.REGULAR);
+	public CommandFuture<Integer> createServerGroup(String name) {
+		return createServerGroup(name, PermissionGroupDatabaseType.REGULAR);
 	}
 
 	/**
@@ -455,7 +455,7 @@ public class TS3ApiAsync {
 	 * @see ServerGroup
 	 * @see PermissionGroupDatabaseType
 	 */
-	public CommandFuture<Integer> addServerGroup(String name, PermissionGroupDatabaseType type) {
+	public CommandFuture<Integer> createServerGroup(String name, PermissionGroupDatabaseType type) {
 		Command cmd = ServerGroupCommands.serverGroupAdd(name, type);
 		return executeAndReturnIntProperty(cmd, "sgid");
 	}
@@ -841,7 +841,7 @@ public class TS3ApiAsync {
 	 * 		if the execution of a command fails
 	 * @querycommands 1
 	 */
-	public CommandFuture<Void> deleteAllBans() {
+	public CommandFuture<Void> removeAllBans() {
 		Command cmd = BanCommands.banDelAll();
 		return executeAndReturnError(cmd);
 	}
@@ -860,7 +860,7 @@ public class TS3ApiAsync {
 	 * @see Client#getDatabaseId()
 	 * @see Complaint
 	 */
-	public CommandFuture<Void> deleteAllComplaints(int clientDBId) {
+	public CommandFuture<Void> removeAllComplaints(int clientDBId) {
 		Command cmd = ComplaintCommands.complainDelAll(clientDBId);
 		return executeAndReturnError(cmd);
 	}
@@ -878,7 +878,7 @@ public class TS3ApiAsync {
 	 * @querycommands 1
 	 * @see Ban#getId()
 	 */
-	public CommandFuture<Void> deleteBan(int banId) {
+	public CommandFuture<Void> removeBan(int banId) {
 		Command cmd = BanCommands.banDel(banId);
 		return executeAndReturnError(cmd);
 	}
@@ -944,7 +944,7 @@ public class TS3ApiAsync {
 	 * @see Client#getDatabaseId()
 	 * @see Permission#getName()
 	 */
-	public CommandFuture<Void> deleteChannelClientPermission(int channelId, int clientDBId, String permName) {
+	public CommandFuture<Void> removeClientChannelPermission(int channelId, int clientDBId, String permName) {
 		Command cmd = PermissionCommands.channelClientDelPerm(channelId, clientDBId, permName);
 		return executeAndReturnError(cmd);
 	}
@@ -1004,7 +1004,7 @@ public class TS3ApiAsync {
 	 * @see ChannelGroup#getId()
 	 * @see Permission#getName()
 	 */
-	public CommandFuture<Void> deleteChannelGroupPermission(int groupId, String permName) {
+	public CommandFuture<Void> removeChannelGroupPermission(int groupId, String permName) {
 		Command cmd = PermissionCommands.channelGroupDelPerm(groupId, permName);
 		return executeAndReturnError(cmd);
 	}
@@ -1025,7 +1025,7 @@ public class TS3ApiAsync {
 	 * @see Channel#getId()
 	 * @see Permission#getName()
 	 */
-	public CommandFuture<Void> deleteChannelPermission(int channelId, String permName) {
+	public CommandFuture<Void> removeChannelPermission(int channelId, String permName) {
 		Command cmd = PermissionCommands.channelDelPerm(channelId, permName);
 		return executeAndReturnError(cmd);
 	}
@@ -1046,7 +1046,7 @@ public class TS3ApiAsync {
 	 * @see Client#getDatabaseId()
 	 * @see Permission#getName()
 	 */
-	public CommandFuture<Void> deleteClientPermission(int clientDBId, String permName) {
+	public CommandFuture<Void> removeClientPermission(int clientDBId, String permName) {
 		Command cmd = PermissionCommands.clientDelPerm(clientDBId, permName);
 		return executeAndReturnError(cmd);
 	}
@@ -1068,7 +1068,7 @@ public class TS3ApiAsync {
 	 * @see Complaint
 	 * @see Client#getDatabaseId()
 	 */
-	public CommandFuture<Void> deleteComplaint(int targetClientDBId, int fromClientDBId) {
+	public CommandFuture<Void> removeComplaint(int targetClientDBId, int fromClientDBId) {
 		Command cmd = ComplaintCommands.complainDel(targetClientDBId, fromClientDBId);
 		return executeAndReturnError(cmd);
 	}
@@ -1647,7 +1647,7 @@ public class TS3ApiAsync {
 	 * @querycommands 1
 	 * @see Channel#getId()
 	 */
-	public CommandFuture<Void> editChannel(int channelId, Map<ChannelProperty, String> options) {
+	public CommandFuture<Void> editChannelProperties(int channelId, Map<ChannelProperty, String> options) {
 		Command cmd = ChannelCommands.channelEdit(channelId, options);
 		return executeAndReturnError(cmd);
 	}
@@ -1672,18 +1672,18 @@ public class TS3ApiAsync {
 	 * 		if the execution of a command fails
 	 * @querycommands 1
 	 * @see Channel#getId()
-	 * @see #editChannel(int, Map)
+	 * @see #editChannelProperties(int, Map)
 	 */
-	public CommandFuture<Void> editChannel(int channelId, ChannelProperty property, String value) {
-		return editChannel(channelId, Collections.singletonMap(property, value));
+	public CommandFuture<Void> editChannelProperty(int channelId, ChannelProperty property, String value) {
+		return editChannelProperties(channelId, Collections.singletonMap(property, value));
 	}
 
 	/**
 	 * Changes a client's configuration using given properties.
 	 * <p>
 	 * Only {@link ClientProperty#CLIENT_DESCRIPTION} can be changed for other clients.
-	 * To update the current client's properties, use {@link #updateClient(Map)}
-	 * or {@link #updateClient(ClientProperty, String)}.
+	 * To update the current client's properties, use {@link #updateClientProperties(Map)}
+	 * or {@link #updateClientProperty(ClientProperty, String)}.
 	 * </p>
 	 *
 	 * @param clientId
@@ -1697,9 +1697,9 @@ public class TS3ApiAsync {
 	 * 		if the execution of a command fails
 	 * @querycommands 1
 	 * @see Client#getId()
-	 * @see #updateClient(Map)
+	 * @see #updateClientProperties(Map)
 	 */
-	public CommandFuture<Void> editClient(int clientId, Map<ClientProperty, String> options) {
+	public CommandFuture<Void> editClientProperties(int clientId, Map<ClientProperty, String> options) {
 		Command cmd = ClientCommands.clientEdit(clientId, options);
 		return executeAndReturnError(cmd);
 	}
@@ -1708,8 +1708,8 @@ public class TS3ApiAsync {
 	 * Changes a single property of the given client.
 	 * <p>
 	 * Only {@link ClientProperty#CLIENT_DESCRIPTION} can be changed for other clients.
-	 * To update the current client's properties, use {@link #updateClient(Map)}
-	 * or {@link #updateClient(ClientProperty, String)}.
+	 * To update the current client's properties, use {@link #updateClientProperties(Map)}
+	 * or {@link #updateClientProperty(ClientProperty, String)}.
 	 * </p>
 	 *
 	 * @param clientId
@@ -1725,11 +1725,11 @@ public class TS3ApiAsync {
 	 * 		if the execution of a command fails
 	 * @querycommands 1
 	 * @see Client#getId()
-	 * @see #editClient(int, Map)
-	 * @see #updateClient(Map)
+	 * @see #editClientProperties(int, Map)
+	 * @see #updateClientProperties(Map)
 	 */
-	public CommandFuture<Void> editClient(int clientId, ClientProperty property, String value) {
-		return editClient(clientId, Collections.singletonMap(property, value));
+	public CommandFuture<Void> editClientProperty(int clientId, ClientProperty property, String value) {
+		return editClientProperties(clientId, Collections.singletonMap(property, value));
 	}
 
 	/**
@@ -2142,7 +2142,7 @@ public class TS3ApiAsync {
 	 * @see Client#getUniqueIdentifier()
 	 * @see ClientInfo
 	 */
-	public CommandFuture<ClientInfo> getClientByUId(String clientUId) {
+	public CommandFuture<ClientInfo> getClientByUniqueId(String clientUId) {
 		Command cmd = ClientCommands.clientGetIds(clientUId);
 		return executeAndReturnIntProperty(cmd, "clid")
 				.then(this::getClientInfo);
@@ -2292,7 +2292,7 @@ public class TS3ApiAsync {
 	 * @see Client#getUniqueIdentifier()
 	 * @see DatabaseClientInfo
 	 */
-	public CommandFuture<DatabaseClientInfo> getDatabaseClientByUId(String clientUId) {
+	public CommandFuture<DatabaseClientInfo> getDatabaseClientByUniqueId(String clientUId) {
 		Command cmd = DatabaseClientCommands.clientDBFind(clientUId, true);
 		CommandFuture<DatabaseClientInfo> future = cmd.getFuture()
 				.then(result -> {
@@ -2851,7 +2851,7 @@ public class TS3ApiAsync {
 	 * @throws TS3CommandFailedException
 	 * 		if the execution of a command fails
 	 * @querycommands 1
-	 * @see #addPrivilegeKey(PrivilegeKeyType, int, int, String)
+	 * @see #createPrivilegeKey(PrivilegeKeyType, int, int, String)
 	 * @see #usePrivilegeKey(String)
 	 */
 	public CommandFuture<List<PrivilegeKey>> getPrivilegeKeys() {
@@ -2959,7 +2959,7 @@ public class TS3ApiAsync {
 	 * @see Client#getDatabaseId()
 	 * @see #getServerGroupsByClient(Client)
 	 */
-	public CommandFuture<List<ServerGroup>> getServerGroupsByClientId(int clientDatabaseId) {
+	public CommandFuture<List<ServerGroup>> getServerGroupsByDatabaseClientId(int clientDatabaseId) {
 		Command cmd = ServerGroupCommands.serverGroupsByClientId(clientDatabaseId);
 
 		CommandFuture<List<Integer>> serverGroupIds = executeAndMap(cmd, response -> response.getInt("sgid"));
@@ -2979,10 +2979,10 @@ public class TS3ApiAsync {
 	 * @throws TS3CommandFailedException
 	 * 		if the execution of a command fails
 	 * @querycommands 2
-	 * @see #getServerGroupsByClientId(int)
+	 * @see #getServerGroupsByDatabaseClientId(int)
 	 */
 	public CommandFuture<List<ServerGroup>> getServerGroupsByClient(Client client) {
-		return getServerGroupsByClientId(client.getDatabaseId());
+		return getServerGroupsByDatabaseClientId(client.getDatabaseId());
 	}
 
 	/**
@@ -3119,7 +3119,7 @@ public class TS3ApiAsync {
 	 * @return {@code true} if the client is online, {@code false} otherwise
 	 *
 	 * @querycommands 1
-	 * @see #getClientByUId(String)
+	 * @see #getClientByUniqueId(String)
 	 */
 	public CommandFuture<Boolean> isClientOnline(String clientUId) {
 		Command cmd = ClientCommands.clientGetIds(clientUId);
@@ -4485,11 +4485,11 @@ public class TS3ApiAsync {
 	 * @throws TS3CommandFailedException
 	 * 		if the execution of a command fails
 	 * @querycommands 1
-	 * @see #updateClient(Map)
+	 * @see #updateClientProperties(Map)
 	 */
 	public CommandFuture<Void> setNickname(String nickname) {
 		Map<ClientProperty, String> options = Collections.singletonMap(ClientProperty.CLIENT_NICKNAME, nickname);
-		return updateClient(options);
+		return updateClientProperties(options);
 	}
 
 	/**
@@ -4600,9 +4600,9 @@ public class TS3ApiAsync {
 	 * @throws TS3CommandFailedException
 	 * 		if the execution of a command fails
 	 * @querycommands 1
-	 * @see #editClient(int, Map)
+	 * @see #editClientProperties(int, Map)
 	 */
-	public CommandFuture<Void> updateClient(Map<ClientProperty, String> options) {
+	public CommandFuture<Void> updateClientProperties(Map<ClientProperty, String> options) {
 		Command cmd = ClientCommands.clientUpdate(options);
 		return executeAndReturnError(cmd);
 	}
@@ -4624,11 +4624,11 @@ public class TS3ApiAsync {
 	 * @throws TS3CommandFailedException
 	 * 		if the execution of a command fails
 	 * @querycommands 1
-	 * @see #updateClient(Map)
-	 * @see #editClient(int, Map)
+	 * @see #updateClientProperties(Map)
+	 * @see #editClientProperties(int, Map)
 	 */
-	public CommandFuture<Void> updateClient(ClientProperty property, String value) {
-		return updateClient(Collections.singletonMap(property, value));
+	public CommandFuture<Void> updateClientProperty(ClientProperty property, String value) {
+		return updateClientProperties(Collections.singletonMap(property, value));
 	}
 
 	/**
@@ -4897,7 +4897,7 @@ public class TS3ApiAsync {
 	 * 		if the execution of a command fails
 	 * @querycommands 1
 	 * @see PrivilegeKey
-	 * @see #addPrivilegeKey(PrivilegeKeyType, int, int, String)
+	 * @see #createPrivilegeKey(PrivilegeKeyType, int, int, String)
 	 * @see #usePrivilegeKey(PrivilegeKey)
 	 */
 	public CommandFuture<Void> usePrivilegeKey(String token) {
@@ -4917,7 +4917,7 @@ public class TS3ApiAsync {
 	 * 		if the execution of a command fails
 	 * @querycommands 1
 	 * @see PrivilegeKey
-	 * @see #addPrivilegeKey(PrivilegeKeyType, int, int, String)
+	 * @see #createPrivilegeKey(PrivilegeKeyType, int, int, String)
 	 * @see #usePrivilegeKey(String)
 	 */
 	public CommandFuture<Void> usePrivilegeKey(PrivilegeKey privilegeKey) {

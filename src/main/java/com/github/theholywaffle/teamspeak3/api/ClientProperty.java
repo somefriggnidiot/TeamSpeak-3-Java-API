@@ -38,7 +38,7 @@ public enum ClientProperty implements Property {
 	CLIENT_AWAY_MESSAGE(false),
 	/**
 	 * Property for the Overwolf badge and any myTeamSpeak badges.
-	 * Can be changed only for the own client by using {@link TS3Api#updateClient(Map)}.
+	 * Can be changed only for the own client by using {@link TS3Api#updateClientProperties(Map)}.
 	 * <p>
 	 * String format: {@code overwolf=n:badges=guid,guid,guid(,guid...)}<br>
 	 * where {@code n} is 0 or 1 and {@code guid} is 128-bit badge GUIDs
