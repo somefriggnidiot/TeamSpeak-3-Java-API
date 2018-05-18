@@ -101,14 +101,14 @@ public class TS3ApiAsync {
 	}
 
 	/**
-	 * Adds a new ban entry. At least one of the parameters {@code ip}, {@code name} or {@code uid} needs to be not null.
+	 * Adds a new ban entry. At least one of the parameters {@code ip}, {@code name} or {@code uniqueId} needs to be not null.
 	 * Returns the ID of the newly created ban.
 	 *
 	 * @param ip
 	 * 		a RegEx pattern to match a client's IP against, can be null
 	 * @param name
 	 * 		a RegEx pattern to match a client's name against, can be null
-	 * @param uid
+	 * @param uniqueId
 	 * 		the unique identifier of a client, can be null
 	 * @param timeInSeconds
 	 * 		the duration of the ban in seconds. 0 equals a permanent ban
@@ -125,8 +125,8 @@ public class TS3ApiAsync {
 	 * @see Client#getUniqueIdentifier()
 	 * @see ClientInfo#getIp()
 	 */
-	public CommandFuture<Integer> addBan(String ip, String name, String uid, long timeInSeconds, String reason) {
-		Command cmd = BanCommands.banAdd(ip, name, uid, timeInSeconds, reason);
+	public CommandFuture<Integer> addBan(String ip, String name, String uniqueId, long timeInSeconds, String reason) {
+		Command cmd = BanCommands.banAdd(ip, name, uniqueId, timeInSeconds, reason);
 		return executeAndReturnIntProperty(cmd, "banid");
 	}
 
@@ -2131,7 +2131,7 @@ public class TS3ApiAsync {
 	/**
 	 * Gets information about the client with the specified unique identifier.
 	 *
-	 * @param clientUId
+	 * @param clientUniqueId
 	 * 		the unique identifier of the client
 	 *
 	 * @return information about the client
@@ -2142,8 +2142,8 @@ public class TS3ApiAsync {
 	 * @see Client#getUniqueIdentifier()
 	 * @see ClientInfo
 	 */
-	public CommandFuture<ClientInfo> getClientByUniqueId(String clientUId) {
-		Command cmd = ClientCommands.clientGetIds(clientUId);
+	public CommandFuture<ClientInfo> getClientByUniqueId(String clientUniqueId) {
+		Command cmd = ClientCommands.clientGetIds(clientUniqueId);
 		return executeAndReturnIntProperty(cmd, "clid")
 				.then(this::getClientInfo);
 	}
@@ -2281,7 +2281,7 @@ public class TS3ApiAsync {
 	/**
 	 * Gets information about the client with the specified unique identifier in the server database.
 	 *
-	 * @param clientUId
+	 * @param clientUniqueId
 	 * 		the unique identifier of the client
 	 *
 	 * @return the database client or {@code null} if no client was found
@@ -2292,8 +2292,8 @@ public class TS3ApiAsync {
 	 * @see Client#getUniqueIdentifier()
 	 * @see DatabaseClientInfo
 	 */
-	public CommandFuture<DatabaseClientInfo> getDatabaseClientByUniqueId(String clientUId) {
-		Command cmd = DatabaseClientCommands.clientDBFind(clientUId, true);
+	public CommandFuture<DatabaseClientInfo> getDatabaseClientByUniqueId(String clientUniqueId) {
+		Command cmd = DatabaseClientCommands.clientDBFind(clientUniqueId, true);
 		CommandFuture<DatabaseClientInfo> future = cmd.getFuture()
 				.then(result -> {
 					if (result.getResponses().isEmpty()) {
@@ -3113,7 +3113,7 @@ public class TS3ApiAsync {
 	 * online by the time the next command is executed.
 	 * </p>
 	 *
-	 * @param clientUId
+	 * @param clientUniqueId
 	 * 		the unique ID of the client
 	 *
 	 * @return {@code true} if the client is online, {@code false} otherwise
@@ -3121,8 +3121,8 @@ public class TS3ApiAsync {
 	 * @querycommands 1
 	 * @see #getClientByUniqueId(String)
 	 */
-	public CommandFuture<Boolean> isClientOnline(String clientUId) {
-		Command cmd = ClientCommands.clientGetIds(clientUId);
+	public CommandFuture<Boolean> isClientOnline(String clietUniqueId) {
+		Command cmd = ClientCommands.clientGetIds(clientUniqueId);
 		CommandFuture<Boolean> future = cmd.getFuture()
 				.map(result -> !result.getResponses().isEmpty());
 
@@ -4217,7 +4217,7 @@ public class TS3ApiAsync {
 	 * The message body's length is limited to 4096 UTF-8 bytes and accepts BB codes
 	 * </p>
 	 *
-	 * @param clientUId
+	 * @param clientUniqueId
 	 * 		the unique identifier of the client to send the message to
 	 * @param subject
 	 * 		the subject for the message, may not contain BB codes
@@ -4232,8 +4232,8 @@ public class TS3ApiAsync {
 	 * @see Client#getUniqueIdentifier()
 	 * @see Message
 	 */
-	public CommandFuture<Void> sendOfflineMessage(String clientUId, String subject, String message) {
-		Command cmd = MessageCommands.messageAdd(clientUId, subject, message);
+	public CommandFuture<Void> sendOfflineMessage(String clientUniqueId, String subject, String message) {
+		Command cmd = MessageCommands.messageAdd(clientUniqueId, subject, message);
 		return executeAndReturnError(cmd);
 	}
 
